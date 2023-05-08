@@ -12,6 +12,7 @@ class Task {
   String? repeatEvery;
   String? note;
   bool completed;
+  bool important;
 
   Task({
     this.id,
@@ -25,6 +26,7 @@ class Task {
     this.repeatEvery,
     this.note,
     required this.completed,
+    this.important = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -40,6 +42,7 @@ class Task {
     data['repeatEvery'] = repeatEvery;
     data['note'] = note;
     data['completed'] = completed;
+    data['important'] = important;
     return data;
   }
 
@@ -54,5 +57,6 @@ class Task {
         repeat = doc.data()!["repeat"],
         repeatEvery = doc.data()!["repeatEvery"],
         note = doc.data()!["note"],
-        completed = doc.data()!["completed"];
+        completed = doc.data()!["completed"],
+        important = doc.data()!["important"];
 }

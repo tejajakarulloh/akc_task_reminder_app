@@ -9,32 +9,50 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepositoryImpl homeRepository;
   HomeBloc(this.homeRepository) : super(HomeLoadingState()) {
-    on<HomeLoadedDataEvent>((event, emit) async {
+    on<HomeLoadedTasksEvent>((event, emit) async {
       emit(HomeLoadingState());
       List<Task> tasks = await homeRepository.retrieveTask();
-      emit(HomeLoadedData(
+      List<Task> tasksCompleted = await homeRepository.retrieveTaskCompleted();
+      emit(HomeLoadedTasks(
         uid: homeRepository.user.currentUser!.uid,
         tasks: tasks,
+        tasksCompleted: tasksCompleted,
       ));
     });
     on<AddTaskEvent>(((event, emit) async {
       emit(HomeLoadingState());
       await homeRepository.saveTask(event.task);
       List<Task> tasks = await homeRepository.retrieveTask();
+      List<Task> tasksCompleted = await homeRepository.retrieveTaskCompleted();
       emit(HomeAddTaskStateAction());
-      emit(HomeLoadedData(
+      emit(HomeLoadedTasks(
         uid: homeRepository.user.currentUser!.uid,
         tasks: tasks,
+        tasksCompleted: tasksCompleted,
       ));
     }));
     on<FlagTaskEvent>(((event, emit) async {
       emit(HomeLoadingState());
       await homeRepository.flagTask(event.task);
       List<Task> tasks = await homeRepository.retrieveTask();
+      List<Task> tasksCompleted = await homeRepository.retrieveTaskCompleted();
       emit(HomeFlagTaskStateAction());
-      emit(HomeLoadedData(
+      emit(HomeLoadedTasks(
         uid: homeRepository.user.currentUser!.uid,
         tasks: tasks,
+        tasksCompleted: tasksCompleted,
+      ));
+    }));
+    on<FlagImportantTaskEvent>(((event, emit) async {
+      emit(HomeLoadingState());
+      await homeRepository.flagImportantTask(event.task);
+      List<Task> tasks = await homeRepository.retrieveTask();
+      List<Task> tasksCompleted = await homeRepository.retrieveTaskCompleted();
+      emit(HomeFlagTaskStateAction());
+      emit(HomeLoadedTasks(
+        uid: homeRepository.user.currentUser!.uid,
+        tasks: tasks,
+        tasksCompleted: tasksCompleted,
       ));
     }));
   }

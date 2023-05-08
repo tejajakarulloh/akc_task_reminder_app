@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) =>
-                HomeBloc(HomeRepositoryImpl())..add(HomeLoadedDataEvent()),
+                HomeBloc(HomeRepositoryImpl())..add(HomeLoadedTasksEvent()),
           ),
         ],
         child: const App(),

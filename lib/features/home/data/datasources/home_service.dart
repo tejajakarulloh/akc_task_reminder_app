@@ -9,14 +9,28 @@ class HomeService {
   }
 
   Future<List<Task>> retrieveTask() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Tasks")
+        .where('completed', isEqualTo: false)
+        .get();
+    return snapshot.docs
+        .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
+        .toList();
+  }
+
+  Future<List<Task>> retrieveTaskCompleted() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await _db.collection("Tasks").get();
+        await _db.collection("Tasks").where('completed', isEqualTo: true).get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
         .toList();
   }
 
   Future<void> flagTask(Task task) async {
+    return await _db.collection("Tasks").doc(task.id).set(task.toJson());
+  }
+
+  Future<void> flagImportantTask(Task task) async {
     return await _db.collection("Tasks").doc(task.id).set(task.toJson());
   }
 }

@@ -9,7 +9,7 @@ abstract class HomeEvent extends Equatable {
 
 class HomeInitialEvent extends HomeEvent {}
 
-class HomeLoadedDataEvent extends HomeEvent {}
+class HomeLoadedTasksEvent extends HomeEvent {}
 
 class AddTaskEvent extends HomeEvent {
   final Task task;
@@ -24,6 +24,15 @@ class FlagTaskEvent extends HomeEvent {
   final Task task;
 
   const FlagTaskEvent({required this.task});
+
+  @override
+  List<Object> get props => [task];
+}
+
+class FlagImportantTaskEvent extends HomeEvent {
+  final Task task;
+
+  const FlagImportantTaskEvent({required this.task});
 
   @override
   List<Object> get props => [task];

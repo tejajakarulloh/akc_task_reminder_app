@@ -6,16 +6,26 @@ abstract class HomeState extends Equatable {
 
 abstract class HomeActionState extends HomeState {}
 
-class HomeLoadedData extends HomeState {
+class HomeLoadedTasks extends HomeState {
   final String uid;
   final List<Task>? tasks;
-  const HomeLoadedData({required this.uid, this.tasks});
+  final List<Task>? tasksCompleted;
+  const HomeLoadedTasks({
+    required this.uid,
+    this.tasks,
+    this.tasksCompleted,
+  });
 
   @override
-  List<Object> get props => [uid, tasks!];
+  List<Object> get props => [uid, tasks!, tasksCompleted!];
 }
 
 class HomeLoadingState extends HomeState {
+  @override
+  List<Object> get props => [];
+}
+
+class HomeLoadingCompletedState extends HomeState {
   @override
   List<Object> get props => [];
 }

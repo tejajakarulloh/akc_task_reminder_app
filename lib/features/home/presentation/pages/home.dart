@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
     print("woy build");
     return Scaffold(
       key: scaffoldKey,
-      resizeToAvoidBottomInset: true,
+      // resizeToAvoidBottomInset: true,
       // backgroundColor: akPrimaryBg,
       drawer: DrawerWidget(
         scaffoldKey: scaffoldKey,
@@ -138,7 +138,7 @@ class _HomeState extends State<Home> {
                         },
                         builder: (context, state) {
                           print("herebuild$state");
-                          if (state is HomeLoadedData) {
+                          if (state is HomeLoadedTasks) {
                             return SafeArea(
                                 child: SingleChildScrollView(
                               child: BuildListTask(
@@ -147,13 +147,15 @@ class _HomeState extends State<Home> {
                                 homeBloc: homeBloc,
                                 user: user,
                                 tasks: state.tasks,
+                                tasksCompleted: state.tasksCompleted,
                               ),
                             ));
                           } else if (state is HomeLoadingState) {
-                            return _buildLoading();
+                            return buildLoading();
                           }
 
-                          return Container();
+                          print("disini 1 $state");
+                          return Container(child: const Text("gk ada build"));
                         },
                       ),
                     ),
@@ -219,9 +221,10 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
 
-  Widget _buildLoading() => Center(
-          child: Column(
+Widget buildLoading() => Center(
+      child: Column(
         children: const [
           CircularProgressIndicator(
             color: Colors.white,
@@ -236,8 +239,8 @@ class _HomeState extends State<Home> {
             ),
           )
         ],
-      ));
-}
+      ),
+    );
 
 class BuildListTask extends StatelessWidget {
   const BuildListTask({
@@ -247,6 +250,7 @@ class BuildListTask extends StatelessWidget {
     required this.homeBloc,
     required this.user,
     required this.tasks,
+    required this.tasksCompleted,
   });
 
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -254,6 +258,7 @@ class BuildListTask extends StatelessWidget {
   final HomeBloc homeBloc;
   final User user;
   final List<Task>? tasks;
+  final List<Task>? tasksCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -317,8 +322,21 @@ class BuildListTask extends StatelessWidget {
                         const SizedBox(
                           width: 5,
                         ),
-                        const Icon(
-                          Icons.star_border_outlined,
+                        InkWell(
+                          onTap: () {
+                            task.important = (!task.important);
+                            homeBloc.add(
+                              FlagImportantTaskEvent(task: task),
+                            );
+                          },
+                          child: task.important
+                              ? Icon(
+                                  Icons.star,
+                                  color: akPrimaryBg,
+                                )
+                              : const Icon(
+                                  Icons.star_border_outlined,
+                                ),
                         ),
                         const SizedBox(
                           width: 5,
@@ -355,10 +373,10 @@ class BuildListTask extends StatelessWidget {
               children: [
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: tasks!.length,
+                  itemCount: tasksCompleted!.length,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    Task task = tasks![index];
+                    Task taskCompleted = tasksCompleted![index];
                     return Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -375,10 +393,10 @@ class BuildListTask extends StatelessWidget {
                             checkColor: Colors.white,
                             activeColor: akPrimaryBg,
                             shape: const CircleBorder(),
-                            value: task.completed,
+                            value: taskCompleted.completed,
                             onChanged: (value) {
-                              task.completed = value!;
-                              homeBloc.add(FlagTaskEvent(task: task));
+                              taskCompleted.completed = value!;
+                              homeBloc.add(FlagTaskEvent(task: taskCompleted));
                             },
                           ),
                           Expanded(
@@ -387,13 +405,13 @@ class BuildListTask extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  task.task,
+                                  taskCompleted.task,
                                   style: const TextStyle(
                                     fontSize: 12,
                                   ),
                                 ),
                                 Text(
-                                  task.category ?? 'Task',
+                                  taskCompleted.category ?? 'Task',
                                   style: const TextStyle(
                                     fontSize: 10,
                                   ),
@@ -404,8 +422,22 @@ class BuildListTask extends StatelessWidget {
                           const SizedBox(
                             width: 5,
                           ),
-                          const Icon(
-                            Icons.star_border_outlined,
+                          InkWell(
+                            onTap: () {
+                              taskCompleted.important =
+                                  (!taskCompleted.important);
+                              homeBloc.add(
+                                FlagImportantTaskEvent(task: taskCompleted),
+                              );
+                            },
+                            child: taskCompleted.important
+                                ? Icon(
+                                    Icons.star,
+                                    color: akPrimaryBg,
+                                  )
+                                : const Icon(
+                                    Icons.star_border_outlined,
+                                  ),
                           ),
                           const SizedBox(
                             width: 5,
@@ -417,27 +449,11 @@ class BuildListTask extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 250,
+            ),
           ],
         ),
-        // Text(
-        //   'Email: \n ${user.email}',
-        //   style: const TextStyle(fontSize: 24),
-        //   textAlign: TextAlign.center,
-        // ),
-        // user.photoURL != null
-        //     ? Image.network("${user.photoURL}")
-        //     : Container(),
-        // user.displayName != null
-        //     ? Text("${user.displayName}")
-        //     : Container(),
-        // const SizedBox(height: 16),
-        // ElevatedButton(
-        //   child: const Text('Sign Out'),
-        //   onPressed: () {
-        //     // Signing out the user
-        //     context.read<AuthBloc>().add(SignOutRequested());
-        //   },
-        // ),
       ],
     );
   }
