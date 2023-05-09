@@ -32,6 +32,36 @@ class HomeLoadedImportantTasks extends HomeState {
   List<Object> get props => [uid, tasks!];
 }
 
+class HomeLoadedPlannedTasks extends HomeState {
+  final String uid;
+  final List<Task>? tasks;
+  const HomeLoadedPlannedTasks({
+    required this.uid,
+    this.tasks,
+  });
+
+  @override
+  List<Object> get props => [uid, tasks!];
+}
+
+class SelectDatepickerState extends HomeActionState {
+  final String date;
+
+  SelectDatepickerState({required this.date});
+
+  @override
+  List<Object> get props => [date];
+}
+
+class SelectCategoryState extends HomeActionState {
+  final String category;
+
+  SelectCategoryState({required this.category});
+
+  @override
+  List<Object> get props => [category];
+}
+
 class HomeLoadingState extends HomeState {
   @override
   List<Object> get props => [];

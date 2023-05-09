@@ -97,10 +97,10 @@ class DrawerWidget extends StatelessWidget {
             _drawerItem(
                 icon: Icons.calendar_view_week_outlined,
                 text: 'Planned',
-                onTap: () => print('Tap Recent menu')),
+                onTap: () => homeBloc.add(HomeLoadedPlannedTasksEvent())),
             _drawerItem(
-                icon: Icons.task_alt_outlined,
-                text: 'Task',
+                icon: Icons.shopping_bag,
+                text: 'Groceries',
                 onTap: () => print('Tap Trash menu')),
             const Divider(height: 25, thickness: 1),
           ],

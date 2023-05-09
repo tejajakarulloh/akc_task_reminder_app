@@ -12,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'build_list_planned_task.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -26,10 +28,10 @@ class _HomeState extends State<Home> {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     HomeBloc homeBloc = context.read<HomeBloc>();
     TextEditingController taskController = TextEditingController();
+    TextEditingController dateController = TextEditingController();
+    TextEditingController categoryController = TextEditingController();
 
     DateTime selectedDate = DateTime.now();
-
-    TextEditingController dateController = TextEditingController();
 
     Future<void> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
@@ -38,11 +40,58 @@ class _HomeState extends State<Home> {
           initialDatePickerMode: DatePickerMode.day,
           firstDate: DateTime(2015),
           lastDate: DateTime(2101));
-      setState(() {
-        selectedDate = picked!;
-        dateController.text = DateFormat.yMd().format(selectedDate);
-        print(dateController.text);
-      });
+      if (picked != null) {
+        String date = DateFormat.yMMMEd().format(picked);
+        dateController.text = picked.toString();
+        homeBloc.add(SelectDatepickerEvent(date: date));
+      }
+    }
+
+    void _settingModalBottomSheet(context) {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext bc) {
+            return Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Please select category :",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Wrap(
+                    children: <Widget>[
+                      ListTile(
+                          leading: const Icon(Icons.task),
+                          title: const Text('Task'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            categoryController.text = 'Task';
+                            homeBloc.add(
+                              const SelectCategoryEvent(category: 'Task'),
+                            );
+                          }),
+                      ListTile(
+                          leading: const Icon(Icons.shopping_basket),
+                          title: const Text('Groceries'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            categoryController.text = 'Groceries';
+                            homeBloc.add(
+                              const SelectCategoryEvent(category: 'Groceries'),
+                            );
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          });
     }
 
     return Scaffold(
@@ -179,11 +228,29 @@ class _HomeState extends State<Home> {
                                 tasks: state.tasks,
                               ),
                             ));
+                          } else if (state is HomeLoadedPlannedTasks) {
+                            return SafeArea(
+                                child: SingleChildScrollView(
+                              child: BuildListPlannedTask(
+                                scaffoldKey: scaffoldKey,
+                                taskController: taskController,
+                                homeBloc: homeBloc,
+                                user: user,
+                                tasks: state.tasks,
+                              ),
+                            ));
                           } else if (state is HomeLoadingState) {
                             return buildLoading();
                           }
 
-                          return Container(child: const Text("gk ada build"));
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(10),
+                            color: Colors.white,
+                            child: const Center(
+                              child: Text("Nothing to build"),
+                            ),
+                          );
                         },
                       ),
                     ),
@@ -212,37 +279,100 @@ class _HomeState extends State<Home> {
                     color: const Color.fromRGBO(255, 255, 255, 0.8),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: TextFormField(
-                    controller: taskController,
-                    decoration: InputDecoration(
-                      // labelText: "Add a task",
-                      hintText: "Add a task",
-                      alignLabelWithHint: true,
-                      labelStyle: const TextStyle(
-                        fontSize: 14,
-                      ),
-                      prefixIcon: InkWell(
-                        onTap: () {
-                          _selectDate(context);
-                        },
-                        child: const Icon(Icons.calendar_month),
-                      ),
-                      suffixIcon: InkWell(
-                        onTap: () {
-                          homeBloc.add(
-                            AddTaskEvent(
-                              task: Task(
-                                uid: user.uid,
-                                task: taskController.text,
-                                completed: false,
-                                date: Timestamp.fromDate(DateTime.now()),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BlocBuilder<HomeBloc, HomeState>(
+                        bloc: homeBloc,
+                        buildWhen: (previous, current) =>
+                            current is SelectDatepickerState,
+                        builder: (context, state) {
+                          if (state is SelectDatepickerState) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.calendar_view_week_outlined,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    state.date,
+                                  ),
+                                ],
                               ),
-                            ),
-                          );
+                            );
+                          }
+
+                          return const SizedBox();
                         },
-                        child: const Icon(Icons.add),
                       ),
-                    ),
+                      TextFormField(
+                        controller: taskController,
+                        decoration: InputDecoration(
+                          hintText: "Try typing like 'pay bill at 10pm'",
+                          hintStyle: const TextStyle(
+                            fontSize: 12,
+                          ),
+                          alignLabelWithHint: true,
+                          prefixIcon: InkWell(
+                            onTap: () {
+                              _selectDate(context);
+                            },
+                            child: const Icon(
+                              Icons.calendar_month,
+                              size: 30,
+                            ),
+                          ),
+                          icon: BlocBuilder<HomeBloc, HomeState>(
+                            builder: (context, state) {
+                              late IconData icon;
+                              if (state is SelectCategoryState) {
+                                if (state.category == 'Task') {
+                                  icon = Icons.task;
+                                } else {
+                                  icon = Icons.shopping_basket;
+                                }
+                              } else {
+                                categoryController.text = 'Task';
+                                icon = Icons.task;
+                              }
+                              return InkWell(
+                                onTap: () {
+                                  _settingModalBottomSheet(context);
+                                },
+                                child: Icon(
+                                  icon,
+                                  size: 30,
+                                ),
+                              );
+                            },
+                          ),
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              homeBloc.add(
+                                AddTaskEvent(
+                                  task: Task(
+                                      uid: user.uid,
+                                      task: taskController.text,
+                                      completed: false,
+                                      date: Timestamp.fromDate(
+                                          DateTime.parse(dateController.text)),
+                                      category: categoryController.text),
+                                ),
+                              );
+                            },
+                            child: const Icon(
+                              Icons.add,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )),

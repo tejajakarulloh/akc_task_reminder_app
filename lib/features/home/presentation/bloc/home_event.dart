@@ -13,6 +13,26 @@ class HomeLoadedTasksEvent extends HomeEvent {}
 
 class HomeLoadedImportantTasksEvent extends HomeEvent {}
 
+class HomeLoadedPlannedTasksEvent extends HomeEvent {}
+
+class SelectDatepickerEvent extends HomeEvent {
+  final String date;
+
+  const SelectDatepickerEvent({required this.date});
+
+  @override
+  List<Object> get props => [date];
+}
+
+class SelectCategoryEvent extends HomeEvent {
+  final String category;
+
+  const SelectCategoryEvent({required this.category});
+
+  @override
+  List<Object> get props => [category];
+}
+
 class AddTaskEvent extends HomeEvent {
   final Task task;
 
