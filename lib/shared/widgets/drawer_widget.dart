@@ -1,10 +1,13 @@
 import 'package:akc_task_reminder_app/config/app_color.dart';
+import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DrawerWidget extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const DrawerWidget({super.key, required this.scaffoldKey});
+  final HomeBloc homeBloc;
+  const DrawerWidget(
+      {super.key, required this.scaffoldKey, required this.homeBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +89,11 @@ class DrawerWidget extends StatelessWidget {
             _drawerItem(
                 icon: Icons.calendar_today,
                 text: 'My Day',
-                onTap: () => print('Tap My Files')),
+                onTap: () => homeBloc.add(HomeLoadedTasksEvent())),
             _drawerItem(
                 icon: Icons.star_border_purple500,
                 text: 'Important',
-                onTap: () => print('Tap Shared menu')),
+                onTap: () => homeBloc.add(HomeLoadedImportantTasksEvent())),
             _drawerItem(
                 icon: Icons.calendar_view_week_outlined,
                 text: 'Planned',

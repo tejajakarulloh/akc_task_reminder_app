@@ -22,6 +22,11 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
+  Future<List<Task>> retrieveImportantTask() {
+    return service.retrieveImportantTask();
+  }
+
+  @override
   Future<void> flagTask(Task task) {
     return service.flagTask(task);
   }
@@ -37,4 +42,6 @@ abstract class HomeRepository {
   Future<void> flagTask(Task task);
   Future<void> flagImportantTask(Task task);
   Future<List<Task>> retrieveTask();
+  Future<List<Task>> retrieveTaskCompleted();
+  Future<List<Task>> retrieveImportantTask();
 }

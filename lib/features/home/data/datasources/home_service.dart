@@ -12,6 +12,8 @@ class HomeService {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _db
         .collection("Tasks")
         .where('completed', isEqualTo: false)
+        .where('date',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
@@ -19,8 +21,12 @@ class HomeService {
   }
 
   Future<List<Task>> retrieveTaskCompleted() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await _db.collection("Tasks").where('completed', isEqualTo: true).get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Tasks")
+        .where('completed', isEqualTo: true)
+        .where('date',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+        .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
         .toList();
@@ -32,5 +38,16 @@ class HomeService {
 
   Future<void> flagImportantTask(Task task) async {
     return await _db.collection("Tasks").doc(task.id).set(task.toJson());
+  }
+
+  Future<List<Task>> retrieveImportantTask() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Tasks")
+        .where('completed', isEqualTo: false)
+        .where('important', isEqualTo: true)
+        .get();
+    return snapshot.docs
+        .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
+        .toList();
   }
 }

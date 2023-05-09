@@ -5,9 +5,9 @@ class Task {
   String uid;
   String task;
   String? category;
-  DateTime? date;
+  Timestamp? date;
   bool? reminder;
-  DateTime? reminderAt;
+  Timestamp? reminderAt;
   String? repeat;
   String? repeatEvery;
   String? note;

@@ -11,6 +11,8 @@ class HomeInitialEvent extends HomeEvent {}
 
 class HomeLoadedTasksEvent extends HomeEvent {}
 
+class HomeLoadedImportantTasksEvent extends HomeEvent {}
+
 class AddTaskEvent extends HomeEvent {
   final Task task;
 

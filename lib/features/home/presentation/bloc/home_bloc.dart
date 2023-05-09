@@ -19,6 +19,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         tasksCompleted: tasksCompleted,
       ));
     });
+    on<HomeLoadedImportantTasksEvent>((event, emit) async {
+      emit(HomeLoadingState());
+      List<Task> tasks = await homeRepository.retrieveImportantTask();
+      emit(HomeLoadedImportantTasks(
+        uid: homeRepository.user.currentUser!.uid,
+        tasks: tasks,
+      ));
+    });
     on<AddTaskEvent>(((event, emit) async {
       emit(HomeLoadingState());
       await homeRepository.saveTask(event.task);
@@ -54,6 +62,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         tasks: tasks,
         tasksCompleted: tasksCompleted,
       ));
+      print(event);
     }));
   }
 }
