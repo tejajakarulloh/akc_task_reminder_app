@@ -65,4 +65,15 @@ class HomeService {
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
         .toList();
   }
+
+  Future<List<Task>> retrieveGroceriesTask() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Tasks")
+        .where('completed', isEqualTo: false)
+        .where('category', isEqualTo: 'Groceries')
+        .get();
+    return snapshot.docs
+        .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
+        .toList();
+  }
 }

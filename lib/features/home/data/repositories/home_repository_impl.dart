@@ -32,6 +32,11 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
+  Future<List<Task>> retrieveGroceriesTask() {
+    return service.retrieveGroceriesTask();
+  }
+
+  @override
   Future<void> flagTask(Task task) {
     return service.flagTask(task);
   }

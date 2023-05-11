@@ -15,6 +15,8 @@ class HomeLoadedImportantTasksEvent extends HomeEvent {}
 
 class HomeLoadedPlannedTasksEvent extends HomeEvent {}
 
+class HomeLoadedGroceriesTasksEvent extends HomeEvent {}
+
 class SelectDatepickerEvent extends HomeEvent {
   final String date;
 

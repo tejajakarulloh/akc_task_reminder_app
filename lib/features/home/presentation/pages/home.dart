@@ -2,6 +2,7 @@ import 'package:akc_task_reminder_app/features/auth/presentation/bloc/auth_bloc.
 import 'package:akc_task_reminder_app/features/auth/presentation/pages/sign_in.dart';
 import 'package:akc_task_reminder_app/features/home/data/models/task_model.dart';
 import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_groceries_task.dart';
 import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_important_task.dart';
 import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_task.dart';
 import 'package:akc_task_reminder_app/shared/widgets/drawer_widget.dart';
@@ -22,16 +23,23 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final user = FirebaseAuth.instance.currentUser!;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController taskController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+
+  DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    dateController.text = DateTime.now().toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     HomeBloc homeBloc = context.read<HomeBloc>();
-    TextEditingController taskController = TextEditingController();
-    TextEditingController dateController = TextEditingController();
-    TextEditingController categoryController = TextEditingController();
-
-    DateTime selectedDate = DateTime.now();
 
     Future<void> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
@@ -239,6 +247,17 @@ class _HomeState extends State<Home> {
                                 tasks: state.tasks,
                               ),
                             ));
+                          } else if (state is HomeLoadedGroceriesTasks) {
+                            return SafeArea(
+                                child: SingleChildScrollView(
+                              child: BuildListGroceriesTask(
+                                scaffoldKey: scaffoldKey,
+                                taskController: taskController,
+                                homeBloc: homeBloc,
+                                user: user,
+                                groceries: state.groceries,
+                              ),
+                            ));
                           } else if (state is HomeLoadingState) {
                             return buildLoading();
                           }
@@ -353,15 +372,18 @@ class _HomeState extends State<Home> {
                           ),
                           suffixIcon: InkWell(
                             onTap: () {
+                              Task newTask = Task(
+                                  uid: user.uid,
+                                  task: taskController.text,
+                                  completed: false,
+                                  category: categoryController.text);
+                              if (dateController.text != '') {
+                                newTask.date = Timestamp.fromDate(
+                                    DateTime.parse(dateController.text));
+                              }
                               homeBloc.add(
                                 AddTaskEvent(
-                                  task: Task(
-                                      uid: user.uid,
-                                      task: taskController.text,
-                                      completed: false,
-                                      date: Timestamp.fromDate(
-                                          DateTime.parse(dateController.text)),
-                                      category: categoryController.text),
+                                  task: newTask,
                                 ),
                               );
                             },

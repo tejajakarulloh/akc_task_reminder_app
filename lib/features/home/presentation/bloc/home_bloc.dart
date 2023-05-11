@@ -35,6 +35,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         tasks: tasks,
       ));
     });
+    on<HomeLoadedGroceriesTasksEvent>((event, emit) async {
+      emit(HomeLoadingState());
+      List<Task> groceries = await homeRepository.retrieveGroceriesTask();
+      emit(HomeLoadedGroceriesTasks(
+        uid: homeRepository.user.currentUser!.uid,
+        groceries: groceries,
+      ));
+    });
     on<SelectDatepickerEvent>(((event, emit) async {
       emit(SelectDatepickerState(date: event.date));
     }));

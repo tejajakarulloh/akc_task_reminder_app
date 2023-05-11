@@ -101,7 +101,7 @@ class DrawerWidget extends StatelessWidget {
             _drawerItem(
                 icon: Icons.shopping_bag,
                 text: 'Groceries',
-                onTap: () => print('Tap Trash menu')),
+                onTap: () => homeBloc.add(HomeLoadedGroceriesTasksEvent())),
             const Divider(height: 25, thickness: 1),
           ],
         ),
