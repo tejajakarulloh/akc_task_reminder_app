@@ -5,6 +5,7 @@ import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.
 import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_groceries_task.dart';
 import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_important_task.dart';
 import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_task.dart';
+import 'package:akc_task_reminder_app/shared/widgets/drawer_task_widget.dart';
 import 'package:akc_task_reminder_app/shared/widgets/drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -110,7 +111,10 @@ class _HomeState extends State<Home> {
         scaffoldKey: scaffoldKey,
         homeBloc: homeBloc,
       ),
-      endDrawer: DrawerWidget(scaffoldKey: scaffoldKey, homeBloc: homeBloc),
+      endDrawer: DrawerTaskWidget(
+        scaffoldKey: scaffoldKey,
+        homeBloc: homeBloc,
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -150,18 +154,62 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  const Text(
-                    "My Day",
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    DateFormat("EEEEE, dd, MMM").format(DateTime.now()),
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: BlocBuilder<HomeBloc, HomeState>(
+                      bloc: homeBloc,
+                      buildWhen: (previous, current) =>
+                          current is! HomeActionState,
+                      builder: (context, state) {
+                        if (state is HomeLoadedTasks) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "My Day",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                DateFormat("EEEEE, dd, MMM")
+                                    .format(DateTime.now()),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          );
+                        } else if (state is HomeLoadedImportantTasks) {
+                          return const Text(
+                            "Important task",
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          );
+                        } else if (state is HomeLoadedPlannedTasks) {
+                          return const Text(
+                            "Planned task",
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          );
+                        } else if (state is HomeLoadedGroceriesTasks) {
+                          return const Text(
+                            "Groceries",
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                            ),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
                     ),
                   ),
                 ],

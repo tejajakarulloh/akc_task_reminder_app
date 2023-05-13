@@ -61,3 +61,21 @@ class FlagImportantTaskEvent extends HomeEvent {
   @override
   List<Object> get props => [task];
 }
+
+class SetSelectTaskEvent extends HomeEvent {
+  final Task task;
+
+  const SetSelectTaskEvent({required this.task});
+
+  @override
+  List<Object> get props => [task];
+}
+
+class UpdateTaskEvent extends HomeEvent {
+  final Task task;
+
+  const UpdateTaskEvent({required this.task});
+
+  @override
+  List<Object> get props => [task];
+}

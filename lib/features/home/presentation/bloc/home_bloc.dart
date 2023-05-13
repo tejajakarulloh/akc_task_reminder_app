@@ -84,7 +84,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         tasks: tasks,
         tasksCompleted: tasksCompleted,
       ));
-      print(event);
+    }));
+    on<SetSelectTaskEvent>(((event, emit) async {
+      emit(SetSelectTaskState(task: event.task));
+    }));
+
+    on<UpdateTaskEvent>(((event, emit) async {
+      emit(HomeLoadingState());
+      await homeRepository.updateTask(event.task);
+      List<Task> tasks = await homeRepository.retrieveTask();
+      List<Task> tasksCompleted = await homeRepository.retrieveTaskCompleted();
+      emit(HomeUpdateTaskStateAction());
+      emit(HomeLoadedTasks(
+        uid: homeRepository.user.currentUser!.uid,
+        tasks: tasks,
+        tasksCompleted: tasksCompleted,
+      ));
     }));
   }
 }

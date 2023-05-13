@@ -76,4 +76,8 @@ class HomeService {
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
         .toList();
   }
+
+  Future<void> updateTask(Task task) async {
+    return await _db.collection("Tasks").doc(task.id).set(task.toJson());
+  }
 }

@@ -98,3 +98,17 @@ class HomeFlagTaskStateAction extends HomeActionState {
   @override
   List<Object?> get props => [];
 }
+
+class HomeUpdateTaskStateAction extends HomeActionState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SetSelectTaskState extends HomeActionState {
+  final Task task;
+
+  SetSelectTaskState({required this.task});
+
+  @override
+  List<Object> get props => [task];
+}

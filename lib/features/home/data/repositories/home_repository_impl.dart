@@ -45,12 +45,18 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<void> flagImportantTask(Task task) {
     return service.flagImportantTask(task);
   }
+
+  @override
+  Future<void> updateTask(Task task) {
+    return service.updateTask(task);
+  }
 }
 
 abstract class HomeRepository {
   Future<void> saveTask(Task task);
   Future<void> flagTask(Task task);
   Future<void> flagImportantTask(Task task);
+  Future<void> updateTask(Task task);
   Future<List<Task>> retrieveTask();
   Future<List<Task>> retrieveTaskCompleted();
   Future<List<Task>> retrieveImportantTask();

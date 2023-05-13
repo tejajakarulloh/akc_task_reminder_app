@@ -1,7 +1,9 @@
 import 'package:akc_task_reminder_app/config/app_color.dart';
+import 'package:akc_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DrawerWidget extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -12,6 +14,8 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
+    AuthBloc authBloc = context.read<AuthBloc>();
+
     return Drawer(
       backgroundColor: akSoftWhite,
       child: SafeArea(
@@ -32,38 +36,55 @@ class DrawerWidget extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-                  const ClipOval(
-                    child: Icon(
-                      Icons.people,
-                      size: 40,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const ClipOval(
+                        child: Icon(
+                          Icons.people,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.displayName!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            user.email!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      authBloc.add(SignOutRequested());
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.logout),
+                        Text("Logout"),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.displayName!,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        user.email!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),
