@@ -1,12 +1,12 @@
-import 'package:akc_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:akc_task_reminder_app/features/auth/presentation/pages/sign_in.dart';
-import 'package:akc_task_reminder_app/features/home/data/models/task_model.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_groceries_task.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_important_task.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/pages/build_list_task.dart';
-import 'package:akc_task_reminder_app/shared/widgets/drawer_task_widget.dart';
-import 'package:akc_task_reminder_app/shared/widgets/drawer_widget.dart';
+import 'package:ingetin_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ingetin_task_reminder_app/features/auth/presentation/pages/sign_in.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/pages/build_list_groceries_task.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/pages/build_list_important_task.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/pages/build_list_task.dart';
+import 'package:ingetin_task_reminder_app/shared/widgets/drawer_task_widget.dart';
+import 'package:ingetin_task_reminder_app/shared/widgets/drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController taskController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
@@ -36,13 +37,14 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     dateController.text = DateTime.now().toString();
+    timeController.text = '';
   }
 
   @override
   Widget build(BuildContext context) {
     HomeBloc homeBloc = context.read<HomeBloc>();
 
-    Future<void> _selectDate(BuildContext context) async {
+    Future<void> selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
           context: context,
           initialDate: selectedDate,
@@ -53,10 +55,19 @@ class _HomeState extends State<Home> {
         String date = DateFormat.yMMMEd().format(picked);
         dateController.text = picked.toString();
         homeBloc.add(SelectDatepickerEvent(date: date));
+
+        final TimeOfDay? timepicked = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+        if (timepicked != null) {
+          homeBloc.add(SelectTimepickerEvent(time: timepicked.format(context)));
+          timeController.text = timepicked.format(context);
+        }
       }
     }
 
-    void _settingModalBottomSheet(context) {
+    void settingModalBottomSheet(context) {
       showModalBottomSheet(
           context: context,
           builder: (BuildContext bc) {
@@ -349,33 +360,65 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BlocBuilder<HomeBloc, HomeState>(
-                        bloc: homeBloc,
-                        buildWhen: (previous, current) =>
-                            current is SelectDatepickerState,
-                        builder: (context, state) {
-                          if (state is SelectDatepickerState) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.calendar_view_week_outlined,
-                                    size: 20,
+                      Row(
+                        children: [
+                          BlocBuilder<HomeBloc, HomeState>(
+                            bloc: homeBloc,
+                            buildWhen: (previous, current) =>
+                                current is SelectDatepickerState,
+                            builder: (context, state) {
+                              if (state is SelectDatepickerState) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.calendar_view_week_outlined,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        state.date,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    state.date,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
+                                );
+                              }
 
-                          return const SizedBox();
-                        },
+                              return const SizedBox();
+                            },
+                          ),
+                          BlocBuilder<HomeBloc, HomeState>(
+                            bloc: homeBloc,
+                            buildWhen: (previous, current) =>
+                                current is SelectTimepickerState,
+                            builder: (context, state) {
+                              if (state is SelectTimepickerState) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.lock_clock,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        state.time,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              return const SizedBox();
+                            },
+                          ),
+                        ],
                       ),
                       TextFormField(
                         controller: taskController,
@@ -387,7 +430,7 @@ class _HomeState extends State<Home> {
                           alignLabelWithHint: true,
                           prefixIcon: InkWell(
                             onTap: () {
-                              _selectDate(context);
+                              selectDate(context);
                             },
                             child: const Icon(
                               Icons.calendar_month,
@@ -409,7 +452,7 @@ class _HomeState extends State<Home> {
                               }
                               return InkWell(
                                 onTap: () {
-                                  _settingModalBottomSheet(context);
+                                  settingModalBottomSheet(context);
                                 },
                                 child: Icon(
                                   icon,
@@ -428,6 +471,14 @@ class _HomeState extends State<Home> {
                               if (dateController.text != '') {
                                 newTask.date = Timestamp.fromDate(
                                     DateTime.parse(dateController.text));
+                              }
+                              if (timeController.text != '') {
+                                newTask.reminder = true;
+                                newTask.date = Timestamp.fromDate(DateTime.parse(
+                                    '${dateController.text.split(' ')[0]} ${timeController.text}'));
+                                newTask.reminderAt = Timestamp.fromDate(
+                                    DateTime.parse(
+                                        '${dateController.text.split(' ')[0]} ${timeController.text}'));
                               }
                               homeBloc.add(
                                 AddTaskEvent(

@@ -1,4 +1,4 @@
-import 'package:akc_task_reminder_app/config/app_color.dart';
+import 'package:ingetin_task_reminder_app/config/app_color.dart';
 import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aksenkode.akc_task_reminder_app">
+    package="com.aksenkode.ingetin_task_reminder_app">
    <application
-        android:label="akc_task_reminder_app"
+        android:label="ingetin_task_reminder_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

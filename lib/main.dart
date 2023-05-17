@@ -1,8 +1,8 @@
-import 'package:akc_task_reminder_app/app.dart';
-import 'package:akc_task_reminder_app/app_bloc_observer.dart';
-import 'package:akc_task_reminder_app/features/home/data/repositories/home_repository_impl.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
-import 'package:akc_task_reminder_app/firebase_options.dart';
+import 'package:ingetin_task_reminder_app/app.dart';
+import 'package:ingetin_task_reminder_app/app_bloc_observer.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/repositories/home_repository_impl.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ingetin_task_reminder_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

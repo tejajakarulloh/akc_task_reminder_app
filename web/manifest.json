@@ -1,6 +1,6 @@
 {
-    "name": "akc_task_reminder_app",
-    "short_name": "akc_task_reminder_app",
+    "name": "ingetin_task_reminder_app",
+    "short_name": "ingetin_task_reminder_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

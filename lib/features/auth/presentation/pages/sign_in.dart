@@ -1,8 +1,8 @@
-import 'package:akc_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:akc_task_reminder_app/features/auth/presentation/pages/sign_up.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/pages/home.dart';
-import 'package:akc_task_reminder_app/shared/widgets/bg_auth_widget.dart';
-import 'package:akc_task_reminder_app/shared/widgets/button_widget.dart';
+import 'package:ingetin_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ingetin_task_reminder_app/features/auth/presentation/pages/sign_up.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/pages/home.dart';
+import 'package:ingetin_task_reminder_app/shared/widgets/bg_auth_widget.dart';
+import 'package:ingetin_task_reminder_app/shared/widgets/button_widget.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

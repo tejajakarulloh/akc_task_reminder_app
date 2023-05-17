@@ -26,6 +26,15 @@ class SelectDatepickerEvent extends HomeEvent {
   List<Object> get props => [date];
 }
 
+class SelectTimepickerEvent extends HomeEvent {
+  final String time;
+
+  const SelectTimepickerEvent({required this.time});
+
+  @override
+  List<Object> get props => [time];
+}
+
 class SelectCategoryEvent extends HomeEvent {
   final String category;
 

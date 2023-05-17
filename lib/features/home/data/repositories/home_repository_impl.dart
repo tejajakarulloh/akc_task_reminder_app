@@ -1,5 +1,5 @@
-import 'package:akc_task_reminder_app/features/home/data/datasources/home_service.dart';
-import 'package:akc_task_reminder_app/features/home/data/models/task_model.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/datasources/home_service.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
@@ -60,5 +60,6 @@ abstract class HomeRepository {
   Future<List<Task>> retrieveTask();
   Future<List<Task>> retrieveTaskCompleted();
   Future<List<Task>> retrieveImportantTask();
+  Future<List<Task>> retrieveGroceriesTask();
   Future<List<Task>> retrievePlannedTask();
 }

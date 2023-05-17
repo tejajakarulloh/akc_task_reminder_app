@@ -1,6 +1,6 @@
-import 'package:akc_task_reminder_app/config/app_color.dart';
-import 'package:akc_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ingetin_task_reminder_app/config/app_color.dart';
+import 'package:ingetin_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,11 +98,8 @@ class DrawerWidget extends StatelessWidget {
               child: TextFormField(
                 decoration: InputDecoration(
                   labelText: "Search",
-                  suffixIcon: InkWell(
-                      onTap: () {
-                        print('wa');
-                      },
-                      child: const Icon(Icons.search)),
+                  suffixIcon:
+                      InkWell(onTap: () {}, child: const Icon(Icons.search)),
                   contentPadding: const EdgeInsets.all(0),
                 ),
               ),

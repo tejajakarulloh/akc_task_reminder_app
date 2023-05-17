@@ -65,6 +65,15 @@ class SelectDatepickerState extends HomeActionState {
   List<Object> get props => [date];
 }
 
+class SelectTimepickerState extends HomeActionState {
+  final String time;
+
+  SelectTimepickerState({required this.time});
+
+  @override
+  List<Object> get props => [time];
+}
+
 class SelectCategoryState extends HomeActionState {
   final String category;
 

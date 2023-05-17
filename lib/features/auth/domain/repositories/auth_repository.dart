@@ -1,5 +1,5 @@
-import 'package:akc_task_reminder_app/features/auth/data/datasources/auth_service.dart';
-import 'package:akc_task_reminder_app/features/auth/data/models/user_model.dart';
+import 'package:ingetin_task_reminder_app/features/auth/data/datasources/auth_service.dart';
+import 'package:ingetin_task_reminder_app/features/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {

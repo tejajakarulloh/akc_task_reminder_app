@@ -1,5 +1,5 @@
-import 'package:akc_task_reminder_app/features/home/data/models/task_model.dart';
-import 'package:akc_task_reminder_app/features/home/data/repositories/home_repository_impl.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/repositories/home_repository_impl.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -45,6 +45,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
     on<SelectDatepickerEvent>(((event, emit) async {
       emit(SelectDatepickerState(date: event.date));
+    }));
+    on<SelectTimepickerEvent>(((event, emit) async {
+      emit(SelectTimepickerState(time: event.time));
     }));
     on<SelectCategoryEvent>(((event, emit) async {
       emit(SelectCategoryState(category: event.category));

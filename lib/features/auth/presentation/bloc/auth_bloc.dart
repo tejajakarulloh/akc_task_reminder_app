@@ -1,4 +1,4 @@
-import 'package:akc_task_reminder_app/features/auth/data/repositories/auth_repository.dart';
+import 'package:ingetin_task_reminder_app/features/auth/data/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

@@ -1,6 +1,6 @@
-import 'package:akc_task_reminder_app/config/app_color.dart';
-import 'package:akc_task_reminder_app/features/home/data/models/task_model.dart';
-import 'package:akc_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ingetin_task_reminder_app/config/app_color.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
+import 'package:ingetin_task_reminder_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

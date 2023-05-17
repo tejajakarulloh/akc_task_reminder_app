@@ -1,4 +1,4 @@
-import 'package:akc_task_reminder_app/features/home/data/models/task_model.dart';
+import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeService {

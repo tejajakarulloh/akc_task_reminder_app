@@ -5,7 +5,7 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = akc_task_reminder_app
+PRODUCT_NAME = ingetin_task_reminder_app
 
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = com.aksenkode.akcTaskReminderApp

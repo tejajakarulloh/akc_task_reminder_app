@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.aksenkode" "\0"
-            VALUE "FileDescription", "akc_task_reminder_app" "\0"
+            VALUE "FileDescription", "ingetin_task_reminder_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "akc_task_reminder_app" "\0"
+            VALUE "InternalName", "ingetin_task_reminder_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.aksenkode. All rights reserved." "\0"
-            VALUE "OriginalFilename", "akc_task_reminder_app.exe" "\0"
-            VALUE "ProductName", "akc_task_reminder_app" "\0"
+            VALUE "OriginalFilename", "ingetin_task_reminder_app.exe" "\0"
+            VALUE "ProductName", "ingetin_task_reminder_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

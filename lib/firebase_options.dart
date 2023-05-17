@@ -23,7 +23,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -47,29 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCDKjFaqrPHg4Va6QMS-T8yWfxSEv0mamQ',
-    appId: '1:836352732926:web:b854ab67719c52c1073faf',
-    messagingSenderId: '836352732926',
-    projectId: 'akc-task-reminder-app',
-    authDomain: 'akc-task-reminder-app.firebaseapp.com',
-    storageBucket: 'akc-task-reminder-app.appspot.com',
+    apiKey: 'AIzaSyAFfdTdhO3Sz0Cfe6mJDgENXITqX3nDMXk',
+    appId: '1:616405748661:web:f5e0911d0fbb57e00167fc',
+    messagingSenderId: '616405748661',
+    projectId: 'ingetin-task-reminder-app',
+    authDomain: 'ingetin-task-reminder-app.firebaseapp.com',
+    storageBucket: 'ingetin-task-reminder-app.appspot.com',
+    measurementId: 'G-P38CVH82NC',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAjvnbwK8MOZ5BuYsT6qpwGjxKL9xf24dQ',
-    appId: '1:836352732926:android:0bf2f99ed004a5f6073faf',
-    messagingSenderId: '836352732926',
-    projectId: 'akc-task-reminder-app',
-    storageBucket: 'akc-task-reminder-app.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCF0OxYtbab9_qzWLDAjz9oxtABfV4sKXU',
-    appId: '1:836352732926:ios:986cf9016d286507073faf',
-    messagingSenderId: '836352732926',
-    projectId: 'akc-task-reminder-app',
-    storageBucket: 'akc-task-reminder-app.appspot.com',
-    iosClientId: '836352732926-lkkgcl8uaor05g5bltkgdegog3h1uu9p.apps.googleusercontent.com',
-    iosBundleId: 'com.aksenkode.akcTaskReminderApp',
+    apiKey: 'AIzaSyCyIsYIya-EZsSAxtJzF-hrLouuoX7hNJ8',
+    appId: '1:616405748661:android:a25e0ae793b043150167fc',
+    messagingSenderId: '616405748661',
+    projectId: 'ingetin-task-reminder-app',
+    storageBucket: 'ingetin-task-reminder-app.appspot.com',
   );
 }
