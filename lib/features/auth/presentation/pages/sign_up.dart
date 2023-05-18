@@ -135,16 +135,19 @@ class _SignUpState extends State<SignUp> {
                               height: 18,
                             ),
                             const Text("Already have an account?"),
-                            OutlinedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignIn(),
-                                  ),
-                                );
-                              },
-                              child: const Text("Sign In"),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: ButtonWidget(
+                                text: "Sign In",
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const SignIn(),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 36,

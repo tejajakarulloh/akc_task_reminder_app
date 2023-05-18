@@ -35,6 +35,21 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    20,
+                  ),
+                  image: const DecorationImage(
+                      image: AssetImage(
+                    'assets/images/logo_ingetin.png',
+                  ))),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
@@ -88,22 +103,22 @@ class DrawerWidget extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: "Search",
-                  suffixIcon:
-                      InkWell(onTap: () {}, child: const Icon(Icons.search)),
-                  contentPadding: const EdgeInsets.all(0),
-                ),
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            //   padding: const EdgeInsets.all(5),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            //   child: TextFormField(
+            //     decoration: InputDecoration(
+            //       labelText: "Search",
+            //       suffixIcon:
+            //           InkWell(onTap: () {}, child: const Icon(Icons.search)),
+            //       contentPadding: const EdgeInsets.all(0),
+            //     ),
+            //   ),
+            // ),
             _drawerItem(
                 icon: Icons.calendar_today,
                 text: 'My Day',
@@ -120,6 +135,10 @@ class DrawerWidget extends StatelessWidget {
                 icon: Icons.shopping_bag,
                 text: 'Groceries',
                 onTap: () => homeBloc.add(HomeLoadedGroceriesTasksEvent())),
+            _drawerItem(
+                icon: Icons.task,
+                text: 'All Tasks',
+                onTap: () => homeBloc.add(HomeLoadedAllTasksEvent())),
             const Divider(height: 25, thickness: 1),
           ],
         ),

@@ -20,6 +20,20 @@ class HomeLoadedTasks extends HomeState {
   List<Object> get props => [uid, tasks!, tasksCompleted!];
 }
 
+class HomeLoadedAllTasks extends HomeState {
+  final String uid;
+  final List<Task>? tasks;
+  final List<Task>? tasksCompleted;
+  const HomeLoadedAllTasks({
+    required this.uid,
+    this.tasks,
+    this.tasksCompleted,
+  });
+
+  @override
+  List<Object> get props => [uid, tasks!, tasksCompleted!];
+}
+
 class HomeLoadedImportantTasks extends HomeState {
   final String uid;
   final List<Task>? tasks;

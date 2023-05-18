@@ -3,6 +3,7 @@ import 'package:ingetin_task_reminder_app/features/home/presentation/bloc/home_b
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ingetin_task_reminder_app/shared/widgets/task_list_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class BuildListPlannedTask extends StatelessWidget {
   const BuildListPlannedTask({
@@ -41,7 +42,7 @@ class BuildListPlannedTask extends StatelessWidget {
                 );
               }
               return LimitedBox(
-                maxHeight: 400,
+                maxHeight: 70.h,
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: tasks!.length,

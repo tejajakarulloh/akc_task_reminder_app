@@ -14,6 +14,7 @@ class App extends StatelessWidget {
     return ResponsiveSizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           builder: (context, child) => MediaQuery(
               data:
                   MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),

@@ -9,6 +9,8 @@ abstract class HomeEvent extends Equatable {
 
 class HomeInitialEvent extends HomeEvent {}
 
+class HomeLoadedAllTasksEvent extends HomeEvent {}
+
 class HomeLoadedTasksEvent extends HomeEvent {}
 
 class HomeLoadedImportantTasksEvent extends HomeEvent {}

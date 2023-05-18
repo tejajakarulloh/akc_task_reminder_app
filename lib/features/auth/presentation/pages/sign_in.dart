@@ -158,16 +158,19 @@ class _SignInState extends State<SignIn> {
                             height: 18,
                           ),
                           const Text("Don't have an account?"),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUp(),
-                                ),
-                              );
-                            },
-                            child: const Text("Sign Up"),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: ButtonWidget(
+                              text: "Sign Up",
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignUp(),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(
                             height: 36,

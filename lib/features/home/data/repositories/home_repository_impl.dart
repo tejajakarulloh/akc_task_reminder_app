@@ -50,6 +50,16 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<void> updateTask(Task task) {
     return service.updateTask(task);
   }
+
+  @override
+  Future<List<Task>> retrieveAllTask() {
+    return service.retrieveAllTask();
+  }
+
+  @override
+  Future<List<Task>> retrieveAllTaskCompleted() {
+    return service.retrieveAllTaskCompleted();
+  }
 }
 
 abstract class HomeRepository {
@@ -59,6 +69,8 @@ abstract class HomeRepository {
   Future<void> updateTask(Task task);
   Future<List<Task>> retrieveTask();
   Future<List<Task>> retrieveTaskCompleted();
+  Future<List<Task>> retrieveAllTask();
+  Future<List<Task>> retrieveAllTaskCompleted();
   Future<List<Task>> retrieveImportantTask();
   Future<List<Task>> retrieveGroceriesTask();
   Future<List<Task>> retrievePlannedTask();

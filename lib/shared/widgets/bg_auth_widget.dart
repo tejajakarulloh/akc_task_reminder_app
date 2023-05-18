@@ -1,5 +1,6 @@
 import 'package:ingetin_task_reminder_app/config/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class BgAuthWidget extends StatelessWidget {
   final Widget child;
@@ -82,6 +83,29 @@ class BgAuthWidget extends StatelessWidget {
             ),
           ),
           Positioned(
+            top: 15.w,
+            width: 100.w,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                      image: const DecorationImage(
+                          image: AssetImage(
+                        'assets/images/logo_ingetin.png',
+                      ))),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
             left: -145,
             top: 325,
             child: Transform.rotate(
@@ -98,18 +122,18 @@ class BgAuthWidget extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            top: 50,
-            right: -20,
-            child: Transform.rotate(
-              angle: -0.4,
-              child: const Icon(
-                Icons.edit,
-                size: 120,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 50,
+          //   right: -20,
+          //   child: Transform.rotate(
+          //     angle: -0.4,
+          //     child: const Icon(
+          //       Icons.edit,
+          //       size: 120,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // ),
           Positioned(child: child),
         ],
       ),

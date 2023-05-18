@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:ingetin_task_reminder_app/app.dart';
 import 'package:ingetin_task_reminder_app/app_bloc_observer.dart';
 import 'package:ingetin_task_reminder_app/features/home/data/repositories/home_repository_impl.dart';
@@ -12,6 +13,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Alarm.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

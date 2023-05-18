@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'build_list_planned_task.dart';
 
@@ -33,11 +34,268 @@ class _HomeState extends State<Home> {
 
   DateTime selectedDate = DateTime.now();
 
+  // tutorial coach mark
+
+  late TutorialCoachMark tutorialCoachMark;
+
+  GlobalKey keyButton1 = GlobalKey();
+  GlobalKey keyButton2 = GlobalKey();
+  GlobalKey keyButton3 = GlobalKey();
+  GlobalKey keyButton4 = GlobalKey();
+  GlobalKey keyButton5 = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+    createTutorial();
+    Future.delayed(const Duration(seconds: 1), showTutorial);
     dateController.text = DateTime.now().toString();
     timeController.text = '';
+  }
+
+  void showTutorial() {
+    tutorialCoachMark.show(context: context);
+  }
+
+  void createTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createTargets(),
+      colorShadow: Colors.red,
+      textSkip: "SKIP",
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        print("finish");
+      },
+      onClickTarget: (target) {
+        print('onClickTarget: $target');
+      },
+      onClickTargetWithTapPosition: (target, tapDetails) {
+        print("target: $target");
+        print(
+            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
+      },
+      onClickOverlay: (target) {
+        print('onClickOverlay: $target');
+      },
+      onSkip: () {
+        print("skip");
+      },
+    );
+  }
+
+  List<TargetFocus> _createTargets() {
+    List<TargetFocus> targets = [];
+    targets.add(
+      TargetFocus(
+        identify: "Menu Navigation",
+        keyTarget: keyButton1,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const <Widget>[
+                  Text(
+                    "Menu Navigation",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Click this icon to open drawer for filtering category of tasks",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "Focus On your Day",
+        keyTarget: keyButton2,
+        color: Colors.purple,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    "Focus On your Day",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Get things done with my day",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.previous();
+                    },
+                    child: const Icon(Icons.chevron_left),
+                  ),
+                ],
+              );
+            },
+          )
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "Category task",
+        keyTarget: keyButton3,
+        color: Colors.purple,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    "Category task",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Chose category of task, default is task you can change to goceries category by click the icon.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.previous();
+                    },
+                    child: const Icon(Icons.chevron_left),
+                  ),
+                ],
+              );
+            },
+          )
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "Planned your task",
+        keyTarget: keyButton4,
+        alignSkip: Alignment.topRight,
+        color: Colors.purple,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    "Planned your task",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "You can set date and time for your task and it will set the alarm for reminder.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.previous();
+                    },
+                    child: const Icon(Icons.chevron_left),
+                  ),
+                ],
+              );
+            },
+          )
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "Add a task",
+        keyTarget: keyButton5,
+        alignSkip: Alignment.topRight,
+        color: Colors.purple,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    "Add a task",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "this input field for you to add a task. and click plus icon to save a task.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.previous();
+                    },
+                    child: const Icon(Icons.chevron_left),
+                  ),
+                ],
+              );
+            },
+          )
+        ],
+        shape: ShapeLightFocus.RRect,
+        radius: 5,
+      ),
+    );
+
+    return targets;
   }
 
   @override
@@ -153,15 +411,31 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
+                        key: keyButton1,
                         onTap: () {
                           scaffoldKey.currentState!.openDrawer();
                         },
                         child: const Icon(
                           Icons.menu,
+                          size: 35,
                           color: Colors.white,
                         ),
+                      ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              10,
+                            ),
+                            image: const DecorationImage(
+                                image: AssetImage(
+                              'assets/images/logo_ingetin.png',
+                            ))),
                       ),
                     ],
                   ),
@@ -174,6 +448,8 @@ class _HomeState extends State<Home> {
                       builder: (context, state) {
                         if (state is HomeLoadedTasks) {
                           return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            key: keyButton2,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
@@ -194,28 +470,80 @@ class _HomeState extends State<Home> {
                             ],
                           );
                         } else if (state is HomeLoadedImportantTasks) {
-                          return const Text(
-                            "Important task",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
+                          return Row(
+                            children: const [
+                              Icon(
+                                Icons.star_border_purple500,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Important task",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           );
                         } else if (state is HomeLoadedPlannedTasks) {
-                          return const Text(
-                            "Planned task",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
+                          return Row(
+                            children: const [
+                              Icon(
+                                Icons.calendar_view_week_outlined,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Planned task",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           );
                         } else if (state is HomeLoadedGroceriesTasks) {
-                          return const Text(
-                            "Groceries",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
+                          return Row(
+                            children: const [
+                              Icon(
+                                Icons.shopping_basket,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Groceries",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          );
+                        } else if (state is HomeLoadedAllTasks) {
+                          return Row(
+                            children: const [
+                              Icon(
+                                Icons.task,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "All Tasks",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           );
                         } else {
                           return const SizedBox();
@@ -228,7 +556,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Positioned(
-            top: 120,
+            top: 150,
             left: 0.1,
             right: 0.1,
             child: Container(
@@ -273,6 +601,18 @@ class _HomeState extends State<Home> {
                         },
                         builder: (context, state) {
                           if (state is HomeLoadedTasks) {
+                            return SafeArea(
+                                child: SingleChildScrollView(
+                              child: BuildListTask(
+                                scaffoldKey: scaffoldKey,
+                                taskController: taskController,
+                                homeBloc: homeBloc,
+                                user: user,
+                                tasks: state.tasks,
+                                tasksCompleted: state.tasksCompleted,
+                              ),
+                            ));
+                          } else if (state is HomeLoadedAllTasks) {
                             return SafeArea(
                                 child: SingleChildScrollView(
                               child: BuildListTask(
@@ -421,6 +761,7 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                       TextFormField(
+                        key: keyButton5,
                         controller: taskController,
                         decoration: InputDecoration(
                           hintText: "Try typing like 'pay bill at 10pm'",
@@ -429,6 +770,7 @@ class _HomeState extends State<Home> {
                           ),
                           alignLabelWithHint: true,
                           prefixIcon: InkWell(
+                            key: keyButton4,
                             onTap: () {
                               selectDate(context);
                             },
@@ -451,6 +793,7 @@ class _HomeState extends State<Home> {
                                 icon = Icons.task;
                               }
                               return InkWell(
+                                key: keyButton3,
                                 onTap: () {
                                   settingModalBottomSheet(context);
                                 },
