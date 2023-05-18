@@ -71,7 +71,7 @@ class DrawerWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user.displayName!,
+                            user.displayName ?? '',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,

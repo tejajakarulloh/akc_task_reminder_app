@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final storage =
           FlutterSecureStorage(aOptions: getAndroidOptionsStorage());
       emit(HomeLoadingState());
-      if (event.task.reminder! == true) {
+      if (event.task.reminder == true) {
         int idAlarm = 0;
         if (await storage.containsKey(key: 'idAlarm')) {
           String? idPrev = await storage.read(key: 'idAlarm');

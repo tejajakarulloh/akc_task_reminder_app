@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-
+  final User user = FirebaseAuth.instance.currentUser!;
   addTask(Task task) async {
     await _db.collection("Tasks").add(task.toJson());
   }
@@ -18,6 +19,7 @@ class HomeService {
         .where('completed', isEqualTo: false)
         .where('date', isLessThan: endOfToday)
         .where('date', isGreaterThan: startOfToday)
+        .where('uid', isEqualTo: user.uid)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
@@ -34,6 +36,7 @@ class HomeService {
         .where('completed', isEqualTo: true)
         .where('date', isLessThan: endOfToday)
         .where('date', isGreaterThan: startOfToday)
+        .where('uid', isEqualTo: user.uid)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
@@ -44,6 +47,7 @@ class HomeService {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _db
         .collection("Tasks")
         .where('completed', isEqualTo: false)
+        .where('uid', isEqualTo: user.uid)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
@@ -51,8 +55,11 @@ class HomeService {
   }
 
   Future<List<Task>> retrieveAllTaskCompleted() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await _db.collection("Tasks").where('completed', isEqualTo: true).get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _db
+        .collection("Tasks")
+        .where('completed', isEqualTo: true)
+        .where('uid', isEqualTo: user.uid)
+        .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
         .toList();
@@ -71,6 +78,7 @@ class HomeService {
         .collection("Tasks")
         .where('completed', isEqualTo: false)
         .where('important', isEqualTo: true)
+        .where('uid', isEqualTo: user.uid)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
@@ -85,6 +93,7 @@ class HomeService {
         .collection("Tasks")
         .where('completed', isEqualTo: false)
         .where('date', isGreaterThan: Timestamp.fromDate(nextDay))
+        .where('uid', isEqualTo: user.uid)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))
@@ -96,6 +105,7 @@ class HomeService {
         .collection("Tasks")
         .where('completed', isEqualTo: false)
         .where('category', isEqualTo: 'Groceries')
+        .where('uid', isEqualTo: user.uid)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Task.fromDocumentSnapshot(docSnapshot))

@@ -114,6 +114,7 @@ class _SignInState extends State<SignIn> {
                           ),
                           TextFormField(
                             keyboardType: TextInputType.text,
+                            obscureText: true,
                             controller: _passwordController,
                             decoration: const InputDecoration(
                               hintText: "Password",

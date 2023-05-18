@@ -1,6 +1,8 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ingetin_task_reminder_app/features/auth/data/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:ingetin_task_reminder_app/shared/helpers/app_helper.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -25,7 +27,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(Loading());
       try {
         await authRepository.signUp(
-            email: event.email, password: event.password);
+          name: event.name,
+          email: event.email,
+          password: event.password,
+        );
+
         emit(Authenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
@@ -47,6 +53,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // When User Presses the SignOut Button, we will send the SignOutRequested Event to the AuthBloc to handle it and emit the UnAuthenticated State
     on<SignOutRequested>((event, emit) async {
       emit(Loading());
+      final storage =
+          FlutterSecureStorage(aOptions: getAndroidOptionsStorage());
+      storage.deleteAll();
       await authRepository.signOut();
       emit(UnAuthenticated());
     });

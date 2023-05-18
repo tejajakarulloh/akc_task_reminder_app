@@ -15,10 +15,11 @@ class SignInRequested extends AuthEvent {
 
 // When the user signing up with email and password this event is called and the [AuthRepository] is called to sign up the user
 class SignUpRequested extends AuthEvent {
+  final String name;
   final String email;
   final String password;
 
-  SignUpRequested(this.email, this.password);
+  SignUpRequested(this.name, this.email, this.password);
 }
 
 // When the user signing in with google this event is called and the [AuthRepository] is called to sign in the user

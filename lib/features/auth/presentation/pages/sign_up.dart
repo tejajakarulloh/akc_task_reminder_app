@@ -16,11 +16,13 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -30,7 +32,8 @@ class _SignUpState extends State<SignUp> {
     if (_formKey.currentState!.validate()) {
       // If email is valid adding new event [SignUpRequested].
       BlocProvider.of<AuthBloc>(context).add(
-        SignUpRequested(_emailController.text, _passwordController.text),
+        SignUpRequested(_nameController.text, _emailController.text,
+            _passwordController.text),
       );
     }
   }
@@ -86,6 +89,19 @@ class _SignUpState extends State<SignUp> {
                         child: Column(
                           children: [
                             TextFormField(
+                              controller: _nameController,
+                              decoration: const InputDecoration(
+                                hintText: "Full Name",
+                                icon: Icon(Icons.mail),
+                                contentPadding: EdgeInsets.all(5),
+                              ),
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
                               controller: _emailController,
                               decoration: const InputDecoration(
                                 hintText: "Email",
@@ -106,6 +122,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                             TextFormField(
                               controller: _passwordController,
+                              obscureText: true,
                               decoration: const InputDecoration(
                                 hintText: "Password",
                                 icon: Icon(Icons.lock),

@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ingetin_task_reminder_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ingetin_task_reminder_app/features/auth/presentation/pages/sign_in.dart';
 import 'package:ingetin_task_reminder_app/features/home/data/models/task_model.dart';
@@ -5,6 +6,7 @@ import 'package:ingetin_task_reminder_app/features/home/presentation/bloc/home_b
 import 'package:ingetin_task_reminder_app/features/home/presentation/pages/build_list_groceries_task.dart';
 import 'package:ingetin_task_reminder_app/features/home/presentation/pages/build_list_important_task.dart';
 import 'package:ingetin_task_reminder_app/features/home/presentation/pages/build_list_task.dart';
+import 'package:ingetin_task_reminder_app/shared/helpers/app_helper.dart';
 import 'package:ingetin_task_reminder_app/shared/widgets/drawer_task_widget.dart';
 import 'package:ingetin_task_reminder_app/shared/widgets/drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,6 +28,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final user = FirebaseAuth.instance.currentUser!;
+
+  final storage = FlutterSecureStorage(aOptions: getAndroidOptionsStorage());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController taskController = TextEditingController();
   TextEditingController dateController = TextEditingController();
@@ -48,7 +52,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     createTutorial();
-    Future.delayed(const Duration(seconds: 1), showTutorial);
     dateController.text = DateTime.now().toString();
     timeController.text = '';
   }
@@ -57,15 +60,15 @@ class _HomeState extends State<Home> {
     tutorialCoachMark.show(context: context);
   }
 
-  void createTutorial() {
+  void createTutorial() async {
     tutorialCoachMark = TutorialCoachMark(
       targets: _createTargets(),
-      colorShadow: Colors.red,
+      colorShadow: Colors.blue[800]!,
       textSkip: "SKIP",
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: () {
-        print("finish");
+        storage.write(key: 'coachMark', value: 'done');
       },
       onClickTarget: (target) {
         print('onClickTarget: $target');
@@ -82,6 +85,11 @@ class _HomeState extends State<Home> {
         print("skip");
       },
     );
+
+    bool cekCoach = await storage.containsKey(key: 'coachMark');
+    if (cekCoach == false) {
+      Future.delayed(const Duration(seconds: 1), showTutorial);
+    }
   }
 
   List<TargetFocus> _createTargets() {
@@ -123,7 +131,6 @@ class _HomeState extends State<Home> {
       TargetFocus(
         identify: "Focus On your Day",
         keyTarget: keyButton2,
-        color: Colors.purple,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -166,7 +173,6 @@ class _HomeState extends State<Home> {
       TargetFocus(
         identify: "Category task",
         keyTarget: keyButton3,
-        color: Colors.purple,
         alignSkip: Alignment.topRight,
         contents: [
           TargetContent(
@@ -211,7 +217,6 @@ class _HomeState extends State<Home> {
         identify: "Planned your task",
         keyTarget: keyButton4,
         alignSkip: Alignment.topRight,
-        color: Colors.purple,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -255,7 +260,6 @@ class _HomeState extends State<Home> {
         identify: "Add a task",
         keyTarget: keyButton5,
         alignSkip: Alignment.topRight,
-        color: Colors.purple,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -372,219 +376,217 @@ class _HomeState extends State<Home> {
           });
     }
 
-    return Scaffold(
-      key: scaffoldKey,
-      // resizeToAvoidBottomInset: true,
-      // backgroundColor: akPrimaryBg,
-      drawer: DrawerWidget(
-        scaffoldKey: scaffoldKey,
-        homeBloc: homeBloc,
-      ),
-      endDrawer: DrawerTaskWidget(
-        scaffoldKey: scaffoldKey,
-        homeBloc: homeBloc,
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Container(
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/background/beach.jpg',
+    return BlocListener<AuthBloc, AuthState>(
+      listenWhen: ((previous, current) => current is AuthStateAction),
+      listener: (context, state) {
+        if (state is UnAuthenticated) {
+          // Navigate to the sign in screen when the user Signs Out
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const SignIn()),
+            (route) => false,
+          );
+        }
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        // resizeToAvoidBottomInset: true,
+        // backgroundColor: akPrimaryBg,
+        drawer: DrawerWidget(
+          scaffoldKey: scaffoldKey,
+          homeBloc: homeBloc,
+        ),
+        endDrawer: DrawerTaskWidget(
+          scaffoldKey: scaffoldKey,
+          homeBloc: homeBloc,
+        ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Container(
+              height: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/background/beach.jpg',
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                fit: BoxFit.cover,
               ),
             ),
-          ),
-          Container(
-            height: 130,
-            padding: const EdgeInsets.only(
-              top: 16,
-              left: 16,
-              right: 16,
-              bottom: 0,
-            ),
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        key: keyButton1,
-                        onTap: () {
-                          scaffoldKey.currentState!.openDrawer();
-                        },
-                        child: const Icon(
-                          Icons.menu,
-                          size: 35,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              10,
-                            ),
-                            image: const DecorationImage(
-                                image: AssetImage(
-                              'assets/images/logo_ingetin.png',
-                            ))),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: BlocBuilder<HomeBloc, HomeState>(
-                      bloc: homeBloc,
-                      buildWhen: (previous, current) =>
-                          current is! HomeActionState,
-                      builder: (context, state) {
-                        if (state is HomeLoadedTasks) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            key: keyButton2,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "My Day",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                DateFormat("EEEEE, dd, MMM")
-                                    .format(DateTime.now()),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (state is HomeLoadedImportantTasks) {
-                          return Row(
-                            children: const [
-                              Icon(
-                                Icons.star_border_purple500,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Important task",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (state is HomeLoadedPlannedTasks) {
-                          return Row(
-                            children: const [
-                              Icon(
-                                Icons.calendar_view_week_outlined,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Planned task",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (state is HomeLoadedGroceriesTasks) {
-                          return Row(
-                            children: const [
-                              Icon(
-                                Icons.shopping_basket,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Groceries",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (state is HomeLoadedAllTasks) {
-                          return Row(
-                            children: const [
-                              Icon(
-                                Icons.task,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "All Tasks",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 150,
-            left: 0.1,
-            right: 0.1,
-            child: Container(
-              width: double.infinity,
-              height: Adaptive.h(80) - 30,
+            Container(
+              height: 130,
               padding: const EdgeInsets.only(
-                top: 0,
+                top: 16,
                 left: 16,
                 right: 16,
                 bottom: 0,
               ),
-              child: SingleChildScrollView(
+              child: SafeArea(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BlocListener<AuthBloc, AuthState>(
-                      listenWhen: ((previous, current) =>
-                          current is AuthStateAction),
-                      listener: (context, state) {
-                        if (state is UnAuthenticated) {
-                          // Navigate to the sign in screen when the user Signs Out
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => const SignIn()),
-                            (route) => false,
-                          );
-                        }
-                      },
-                      child: BlocConsumer<HomeBloc, HomeState>(
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          key: keyButton1,
+                          onTap: () {
+                            scaffoldKey.currentState!.openDrawer();
+                          },
+                          child: const Icon(
+                            Icons.menu,
+                            size: 35,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                10,
+                              ),
+                              image: const DecorationImage(
+                                  image: AssetImage(
+                                'assets/images/logo_ingetin.png',
+                              ))),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: BlocBuilder<HomeBloc, HomeState>(
+                        bloc: homeBloc,
+                        buildWhen: (previous, current) =>
+                            current is! HomeActionState,
+                        builder: (context, state) {
+                          if (state is HomeLoadedTasks) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              key: keyButton2,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "My Day",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat("EEEEE, dd, MMM")
+                                      .format(DateTime.now()),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (state is HomeLoadedImportantTasks) {
+                            return Row(
+                              children: const [
+                                Icon(
+                                  Icons.star_border_purple500,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Important task",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (state is HomeLoadedPlannedTasks) {
+                            return Row(
+                              children: const [
+                                Icon(
+                                  Icons.calendar_view_week_outlined,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Planned task",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (state is HomeLoadedGroceriesTasks) {
+                            return Row(
+                              children: const [
+                                Icon(
+                                  Icons.shopping_basket,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "Groceries",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (state is HomeLoadedAllTasks) {
+                            return Row(
+                              children: const [
+                                Icon(
+                                  Icons.task,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "All Tasks",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 155,
+              left: 0.1,
+              right: 0.1,
+              child: Container(
+                width: double.infinity,
+                height: Adaptive.h(80) - 30,
+                padding: const EdgeInsets.only(
+                  top: 0,
+                  left: 16,
+                  right: 16,
+                  bottom: 0,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      BlocConsumer<HomeBloc, HomeState>(
                         bloc: homeBloc,
                         listenWhen: (previous, current) =>
                             current is HomeActionState,
@@ -671,176 +673,177 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-              left: 0.1,
-              right: 0.1,
-              bottom: 0,
-              child: SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 16,
-                  ),
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 0,
-                    bottom: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(255, 255, 255, 0.8),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          BlocBuilder<HomeBloc, HomeState>(
-                            bloc: homeBloc,
-                            buildWhen: (previous, current) =>
-                                current is SelectDatepickerState,
-                            builder: (context, state) {
-                              if (state is SelectDatepickerState) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.calendar_view_week_outlined,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        state.date,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              return const SizedBox();
-                            },
-                          ),
-                          BlocBuilder<HomeBloc, HomeState>(
-                            bloc: homeBloc,
-                            buildWhen: (previous, current) =>
-                                current is SelectTimepickerState,
-                            builder: (context, state) {
-                              if (state is SelectTimepickerState) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.lock_clock,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        state.time,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              return const SizedBox();
-                            },
-                          ),
-                        ],
-                      ),
-                      TextFormField(
-                        key: keyButton5,
-                        controller: taskController,
-                        decoration: InputDecoration(
-                          hintText: "Try typing like 'pay bill at 10pm'",
-                          hintStyle: const TextStyle(
-                            fontSize: 12,
-                          ),
-                          alignLabelWithHint: true,
-                          prefixIcon: InkWell(
-                            key: keyButton4,
-                            onTap: () {
-                              selectDate(context);
-                            },
-                            child: const Icon(
-                              Icons.calendar_month,
-                              size: 30,
-                            ),
-                          ),
-                          icon: BlocBuilder<HomeBloc, HomeState>(
-                            builder: (context, state) {
-                              late IconData icon;
-                              if (state is SelectCategoryState) {
-                                if (state.category == 'Task') {
-                                  icon = Icons.task;
-                                } else {
-                                  icon = Icons.shopping_basket;
-                                }
-                              } else {
-                                categoryController.text = 'Task';
-                                icon = Icons.task;
-                              }
-                              return InkWell(
-                                key: keyButton3,
-                                onTap: () {
-                                  settingModalBottomSheet(context);
-                                },
-                                child: Icon(
-                                  icon,
-                                  size: 30,
-                                ),
-                              );
-                            },
-                          ),
-                          suffixIcon: InkWell(
-                            onTap: () {
-                              Task newTask = Task(
-                                  uid: user.uid,
-                                  task: taskController.text,
-                                  completed: false,
-                                  category: categoryController.text);
-                              if (dateController.text != '') {
-                                newTask.date = Timestamp.fromDate(
-                                    DateTime.parse(dateController.text));
-                              }
-                              if (timeController.text != '') {
-                                newTask.reminder = true;
-                                newTask.date = Timestamp.fromDate(DateTime.parse(
-                                    '${dateController.text.split(' ')[0]} ${timeController.text}'));
-                                newTask.reminderAt = Timestamp.fromDate(
-                                    DateTime.parse(
-                                        '${dateController.text.split(' ')[0]} ${timeController.text}'));
-                              }
-                              homeBloc.add(
-                                AddTaskEvent(
-                                  task: newTask,
-                                ),
-                              );
-                            },
-                            child: const Icon(
-                              Icons.add,
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
-              )),
-        ],
+              ),
+            ),
+            Positioned(
+                left: 0.1,
+                right: 0.1,
+                bottom: 0,
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 16,
+                    ),
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      top: 0,
+                      bottom: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(255, 255, 255, 0.8),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            BlocBuilder<HomeBloc, HomeState>(
+                              bloc: homeBloc,
+                              buildWhen: (previous, current) =>
+                                  current is SelectDatepickerState,
+                              builder: (context, state) {
+                                if (state is SelectDatepickerState) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_view_week_outlined,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          state.date,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                return const SizedBox();
+                              },
+                            ),
+                            BlocBuilder<HomeBloc, HomeState>(
+                              bloc: homeBloc,
+                              buildWhen: (previous, current) =>
+                                  current is SelectTimepickerState,
+                              builder: (context, state) {
+                                if (state is SelectTimepickerState) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.lock_clock,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          state.time,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                return const SizedBox();
+                              },
+                            ),
+                          ],
+                        ),
+                        TextFormField(
+                          key: keyButton5,
+                          controller: taskController,
+                          decoration: InputDecoration(
+                            hintText: "Try typing like 'pay bill at 10pm'",
+                            hintStyle: const TextStyle(
+                              fontSize: 12,
+                            ),
+                            alignLabelWithHint: true,
+                            prefixIcon: InkWell(
+                              key: keyButton4,
+                              onTap: () {
+                                selectDate(context);
+                              },
+                              child: const Icon(
+                                Icons.calendar_month,
+                                size: 30,
+                              ),
+                            ),
+                            icon: BlocBuilder<HomeBloc, HomeState>(
+                              builder: (context, state) {
+                                late IconData icon;
+                                if (state is SelectCategoryState) {
+                                  if (state.category == 'Task') {
+                                    icon = Icons.task;
+                                  } else {
+                                    icon = Icons.shopping_basket;
+                                  }
+                                } else {
+                                  categoryController.text = 'Task';
+                                  icon = Icons.task;
+                                }
+                                return InkWell(
+                                  key: keyButton3,
+                                  onTap: () {
+                                    settingModalBottomSheet(context);
+                                  },
+                                  child: Icon(
+                                    icon,
+                                    size: 30,
+                                  ),
+                                );
+                              },
+                            ),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                Task newTask = Task(
+                                    uid: user.uid,
+                                    task: taskController.text,
+                                    completed: false,
+                                    category: categoryController.text);
+                                if (dateController.text != '') {
+                                  newTask.reminder = false;
+                                  newTask.date = Timestamp.fromDate(
+                                      DateTime.parse(dateController.text));
+                                }
+                                if (timeController.text != '') {
+                                  newTask.reminder = true;
+                                  newTask.date = Timestamp.fromDate(DateTime.parse(
+                                      '${dateController.text.split(' ')[0]} ${timeController.text}'));
+                                  newTask.reminderAt = Timestamp.fromDate(
+                                      DateTime.parse(
+                                          '${dateController.text.split(' ')[0]} ${timeController.text}'));
+                                }
+                                homeBloc.add(
+                                  AddTaskEvent(
+                                    task: newTask,
+                                  ),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.add,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+          ],
+        ),
       ),
     );
   }
